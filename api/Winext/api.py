@@ -1,14 +1,23 @@
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
 from .serializers import *
 from .models import User, Role
 
 class UserIndexAPIView(APIView):
     def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response({"users": serializer.data})
-    
+        try:
+            users = User.objects.all()
+            if not users:
+                return Response({"error": "No se encontraron usuarios"}, status=404)
+            serializer = UserSerializer(users, many=True)
+            return Response({"users": serializer.data})
+        except ObjectDoesNotExist:
+            return Response({"error": "No se encontró el usuario"}, status=404)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
+
 class RoleIndexAPIView(APIView):
     def get(self, request):
         role = Role.objects.all()
