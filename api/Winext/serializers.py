@@ -9,7 +9,8 @@ class RoleSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['id_user', 'role', 'id_profile', 'nickname', 'password', 'email', 'created_at', 'updated_at', 'deleted_at']
+
         
 """
 este es un ejemplo de como hacerlas mas personalizadas, arreglar todo eso asi

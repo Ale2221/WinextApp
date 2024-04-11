@@ -138,8 +138,9 @@ class Profile(models.Model):
 # Taxistas 
 #------------------------------------------------------------------------------------------------------------
 class TaxiUser(Profile):
-    id_vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL)
+    id_vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
     document = models.CharField(unique=True)
+    id_agency = models.OneToOneField(Agency, on_delete=models.SET_NULL, null=True)
 
 #------------------------------------------------------------------------------------------------------------
 # Vehiculo
@@ -172,11 +173,10 @@ class Vehicle(models.Model):
 # Agencia
 #------------------------------------------------------------------------------------------------------------
 class Agency(models.Model):
-
-    name = models.Charfield(max_lenght = 50)
-    addres = models.Charfiel(max_lenght = 50)
-    phone = models.Charfield(max_lenght = 15)
-    email = models.CHarfiel(unique = True, max_lenght = 30)
+    name = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15)
+    email = models.CharField(unique=True, max_length=30)
 
     class Meta:
         verbose_name = _("Agency")
@@ -187,6 +187,7 @@ class Agency(models.Model):
 
     def get_absolute_url(self):
         return reverse("Agency_detail", kwargs={"pk": self.pk})
+
 
 #------------------------------------------------------------------------------------------------------------
 # Viaje
