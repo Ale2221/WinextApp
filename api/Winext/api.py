@@ -26,7 +26,16 @@ class UserIndexAPIView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # BUsca user por PK, los actualiza y los guarda
+    # Busca a un usuario por su id
+    def show(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Busca user por PK, los actualiza y los guarda
     def put(self, request, pk):
         try:
             user = User.objects.get(pk=pk)
@@ -37,8 +46,8 @@ class UserIndexAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
     
+    # Implementa soft delete o borrado suave
     def delete(self, request, pk):
         try:
             user = User.objects.get(pk=pk)
@@ -47,6 +56,7 @@ class UserIndexAPIView(APIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Reactiva al usuario eliminado
     def restore(self, request, pk):
         try:
             user = User.objects.only_deleted().get(pk=pk)
